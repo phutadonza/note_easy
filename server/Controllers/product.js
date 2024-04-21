@@ -19,11 +19,19 @@ export const cate_list = async (req, res) => {
     conn.query(
       'SELECT * FROM category WHERE category_id = ?',
       [cate_id],
-      (err, results, fields) => {}
+      (err, results, fields) => {
+        if (err) {
+          console.log(err)
+          return res
+            .status(500)
+            .send('Server error can not pull data from cate')
+        }
+        res.json(results)
+      }
     )
   } catch (err) {
     console.log(err)
-    res.status(500).send('server error')
+    res.status(500).send('server error with API cate')
   }
 }
 export const register = async (req, res) => {
