@@ -1,6 +1,6 @@
 import express from 'express'
 import {
-  list,
+  cate_list,
   update,
   remove,
   register,
@@ -14,6 +14,7 @@ const router = express.Router()
 
 //http://localhost:5000/api/note
 
+router.get('/note/cate_list', cate_list)
 router.get('/note/sessionget', sessionget)
 router.post('/note/register', register)
 router.get('/note/delete', sessiondel)

@@ -12,9 +12,15 @@ app.use(
     saveUninitialized: true,
   })
 )
-export const list = async (req, res) => {
+export const cate_list = async (req, res) => {
   try {
-    res.send('Hello list')
+    cate_id = res.body.cate_id
+
+    conn.query(
+      'SELECT * FROM category WHERE category_id = ?',
+      [cate_id],
+      (err, results, fields) => {}
+    )
   } catch (err) {
     console.log(err)
     res.status(500).send('server error')

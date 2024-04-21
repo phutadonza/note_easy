@@ -67,7 +67,7 @@ function Note() {
             <form ref={form} onSubmit={onSubmitForm}>
               <select
                 className="btn btn-sm btn-light border mb-4"
-                name="status"
+                name="cate_id"
                 defaultValue={category[0]}
                 style={{ height: '30px' }}
               >
