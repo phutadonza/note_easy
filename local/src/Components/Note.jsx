@@ -1,12 +1,23 @@
-import { useEffect, useContext, useRef } from 'react'
+import { useEffect, useContext, useRef, useState } from 'react'
 import { dataContext, userContext } from '../App'
 
 function Note() {
   const form = useRef()
+  const [categories, setCategories] = useState([])
   let category = ['study', 'work']
   let [signedIn, setSignedIn] = useContext(userContext)
   let [data, setData] = useContext(dataContext)
-
+  useEffect(() => {
+    fetch('/api/cate_list')
+      .then((res) => {
+        res.json()
+      })
+      .then((result) => {
+        setCategories(result)
+        console.log(result)
+      })
+      .catch((err) => alert(err.message))
+  }, [])
   useEffect(() => {
     fetch('/api/note/sessionget')
       .then((res) => res.json())
@@ -14,16 +25,6 @@ function Note() {
         console.log(result)
         setSignedIn(result.signedIn)
         setData(result.cus_id)
-      })
-      .catch((err) => alert(err.message))
-  }, [])
-
-  useEffect(() => {
-    fetch('/api/note/sessionget')
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result)
-        setSignedIn(result.signedIn)
       })
       .catch((err) => alert(err.message))
   }, [])
@@ -65,18 +66,18 @@ function Note() {
             style={{ width: '400px', background: '#cee' }}
           >
             <form ref={form} onSubmit={onSubmitForm}>
-              <select
+              {/* <select
                 className="btn btn-sm btn-light border mb-4"
                 name="cate_id"
-                defaultValue={category[0]}
+                defaultValue={categories[0]?.id}
                 style={{ height: '30px' }}
               >
-                {category.map((item, i) => (
+                {categories.map((item, i) => (
                   <option key={i + 1} value={item}>
-                    {item}
+                    {item.cate_name}
                   </option>
                 ))}
-              </select>
+              </select> */}
               <div className="form-group mb-4">
                 <input
                   type="text"

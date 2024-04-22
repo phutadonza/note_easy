@@ -14,26 +14,20 @@ app.use(
 )
 export const cate_list = async (req, res) => {
   try {
-    cate_id = res.body.cate_id
-
-    conn.query(
-      'SELECT * FROM category WHERE category_id = ?',
-      [cate_id],
-      (err, results, fields) => {
-        if (err) {
-          console.log(err)
-          return res
-            .status(500)
-            .send('Server error can not pull data from cate')
-        }
-        res.json(results)
+    conn.query('SELECT * FROM category_note', (err, results, fields) => {
+      if (err) {
+        console.log(err)
+        return res.status(500).send('Server error can not pull data from cate')
       }
-    )
+      console.log(results) // ตรวจสอบว่าผลลัพธ์ที่ได้รับมาจากการสอบถามถูกต้องหรือไม่
+      res.json(results) // ส่งข้อมูลกลับไปยัง client ในรูปแบบ JSON
+    })
   } catch (err) {
     console.log(err)
     res.status(500).send('server error with API cate')
   }
 }
+
 export const register = async (req, res) => {
   console.log(req.body)
   let form = req.body
