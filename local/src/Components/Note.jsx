@@ -7,17 +7,7 @@ function Note() {
   let category = ['study', 'work']
   let [signedIn, setSignedIn] = useContext(userContext)
   let [data, setData] = useContext(dataContext)
-  useEffect(() => {
-    fetch('/api/cate_list')
-      .then((res) => {
-        res.json()
-      })
-      .then((result) => {
-        setCategories(result)
-        console.log(result)
-      })
-      .catch((err) => alert(err.message))
-  }, [])
+
   useEffect(() => {
     fetch('/api/note/sessionget')
       .then((res) => res.json())
@@ -25,8 +15,8 @@ function Note() {
         console.log(result)
         setSignedIn(result.signedIn)
         setData(result.cus_id)
+        setCategories(result.categories)
       })
-      .catch((err) => alert(err.message))
   }, [])
 
   const onSubmitForm = (event) => {
@@ -66,7 +56,7 @@ function Note() {
             style={{ width: '400px', background: '#cee' }}
           >
             <form ref={form} onSubmit={onSubmitForm}>
-              {/* <select
+              <select
                 className="btn btn-sm btn-light border mb-4"
                 name="cate_id"
                 defaultValue={categories[0]?.id}
@@ -77,7 +67,7 @@ function Note() {
                     {item.cate_name}
                   </option>
                 ))}
-              </select> */}
+              </select>
               <div className="form-group mb-4">
                 <input
                   type="text"

@@ -12,21 +12,7 @@ app.use(
     saveUninitialized: true,
   })
 )
-export const cate_list = async (req, res) => {
-  try {
-    conn.query('SELECT * FROM category_note', (err, results, fields) => {
-      if (err) {
-        console.log(err)
-        return res.status(500).send('Server error can not pull data from cate')
-      }
-      console.log(results) // ตรวจสอบว่าผลลัพธ์ที่ได้รับมาจากการสอบถามถูกต้องหรือไม่
-      res.json(results) // ส่งข้อมูลกลับไปยัง client ในรูปแบบ JSON
-    })
-  } catch (err) {
-    console.log(err)
-    res.status(500).send('server error with API cate')
-  }
-}
+export const cate_list = async (req, res) => {}
 
 export const register = async (req, res) => {
   console.log(req.body)
@@ -98,12 +84,27 @@ export const login = async (req, res) => {
 }
 export const sessionget = async (req, res) => {
   if (req.session.email) {
-    res.json({
-      signedIn: true,
-      email: req.session.email,
-      name: req.session.name,
-      cus_id: req.session.cus_id,
-    })
+    try {
+      conn.query('SELECT * FROM category_note', (err, results, fields) => {
+        if (err) {
+          console.log(err)
+          return res
+            .status(500)
+            .send('Server error can not pull data from cate')
+        }
+        console.log(results) // ตรวจสอบว่าผลลัพธ์ที่ได้รับมาจากการสอบถามถูกต้องหรือไม่
+        res.json({
+          signedIn: true,
+          email: req.session.email,
+          name: req.session.name,
+          cus_id: req.session.cus_id,
+          categories: results, // เพิ่มข้อมูลหมวดหมู่ใน response
+        })
+      })
+    } catch (err) {
+      console.log(err)
+      res.status(500).send('server error with API cate')
+    }
   } else {
     res.json({ signedIn: false })
   }
