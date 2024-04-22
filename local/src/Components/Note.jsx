@@ -26,16 +26,16 @@ function Note() {
     const combinedData = { ...formEnt, cus_id: data }
     console.log(combinedData)
 
-    // fetch('/api/note/createnote', {
-    //   method: 'POST',
-    //   body: JSON.stringify(formEnt),
-    //   headers: { 'Content-Type': 'application/json' },
-    // })
-    //   .then((res) => res.json())
-    //   .then((result) => {
-    //     alert('successfully created note')
-    //   })
-    //   .catch((err) => alert(err))
+    fetch('/api/note/createnote', {
+      method: 'POST',
+      body: JSON.stringify(formEnt),
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        alert('successfully created note')
+      })
+      .catch((err) => alert(err))
   }
 
   if (!signedIn) {
@@ -56,29 +56,23 @@ function Note() {
             style={{ width: '400px', background: '#cee' }}
           >
             <form ref={form} onSubmit={onSubmitForm}>
-              <select
-                className="btn btn-sm btn-light border mb-4"
-                name="cate_id"
-                defaultValue={categories[0]?.id}
-                style={{ height: '30px' }}
-              >
-                {categories.map((item, i) => (
-                  <option key={i + 1} value={item}>
-                    {item.cate_name}
-                  </option>
-                ))}
-              </select>
-              <div className="form-group mb-4">
-                <input
-                  type="text"
-                  name="cate_name"
-                  required
-                  placeholder="Enter Category"
-                  maxLength="50"
-                  className="form-control form-control-sm"
-                />
+              <div>
+                Category
+                <br />
+                <select
+                  className="btn btn-sm btn-light border"
+                  name="cate_id"
+                  defaultValue={categories[0]?.id}
+                  style={{ height: '30px' }}
+                >
+                  {categories.map((item, i) => (
+                    <option key={i + 1} value={item.category_id}>
+                      {item.cate_name}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="form-group mb-4">
+              <div className="form-group mb-4 mt-4">
                 <input
                   type="text"
                   name="title"

@@ -116,7 +116,9 @@ export const sessiondel = async (req, res) => {
   })
 }
 
-export const createnote = async (req, res) => {}
+export const createnote = async (req, res) => {
+  console.log(req)
+}
 
 export const update = async (req, res) => {
   try {
