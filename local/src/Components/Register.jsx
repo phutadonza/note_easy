@@ -39,10 +39,10 @@ export default function Register() {
       .then((result) => {
         // ตรวจสอบว่าการสมัครสำเร็จหรือไม่
         if (result.message === 'New data Customer successfully created') {
-          alert(result.message)
+          alert('successfully created')
           navigate('/login')
         } else if (result.message === 'Email already exists') {
-          alert(result.message)
+          alert('Email already exists. Please use another email.')
         } else {
           // กรณีอื่นๆ ที่ไม่ได้ระบุไว้ในเงื่อนไขข้างต้น
           alert('An error occurred. Please try again later.')
@@ -94,7 +94,6 @@ export default function Register() {
             <label>Re-Password</label>
             <input
               type="password"
-              name="cus_password2"
               required
               className="form-control form-control-sm"
               ref={textPswd2}
