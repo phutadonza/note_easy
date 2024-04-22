@@ -24,7 +24,7 @@ function Note() {
     const formEnt = Object.fromEntries(formData.entries())
     const combinedData = { ...formEnt, cus_id: data_id }
     //console.log(data.cus_id)
-    console.log(combinedData)
+    //console.log(combinedData)
 
     fetch('/api/note/createnote', {
       method: 'POST',

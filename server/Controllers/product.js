@@ -15,7 +15,7 @@ app.use(
 export const cate_list = async (req, res) => {}
 
 export const register = async (req, res) => {
-  console.log(req.body)
+  //console.log(req.body)
   let form = req.body
   let data = {
     cus_name: form.cus_name || '',
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
           email == results[0].cus_email &&
           password == results[0].cus_password
         ) {
-          console.log(results[0].cus_id)
+          //console.log(results[0].cus_id)
           req.session['email'] = email
           req.session['name'] = results[0].cus_name
           req.session['cus_id'] = results[0].cus_id
@@ -120,7 +120,7 @@ export const sessiondel = async (req, res) => {
 }
 
 export const createnote = async (req, res) => {
-  console.log(req)
+  console.log(req.body, req.session.cus_id)
   let form = req.body
   let customer_id = req.session.cus_id
   let data = {
@@ -131,6 +131,9 @@ export const createnote = async (req, res) => {
     updated: form.cus_password2 || '',
     cus_id: customer_id || '',
   }
+  try {
+    conn.query()
+  } catch (err) {}
 }
 
 export const update = async (req, res) => {
