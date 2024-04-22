@@ -7,7 +7,7 @@ import Note from './Components/Note'
 export const userContext = createContext()
 export const userDataContext = createContext()
 export const dataContext = createContext()
-export const baseUrl = 'http://localhost:5000'
+export const baseUrl = 'https://note-easy-server.onrender.com'
 
 function App() {
   let [signedIn, setSignedIn] = useState(null)

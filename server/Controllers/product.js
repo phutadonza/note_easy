@@ -1,4 +1,3 @@
-import { Notes, Customers, History, Category } from '../Models/models.js'
 import { connection as conn } from '../Config/db.js'
 import session from 'express-session'
 import express from 'express'
@@ -13,8 +12,6 @@ app.use(
     saveUninitialized: true,
   })
 )
-export const cate_list = async (req, res) => {}
-
 export const register = async (req, res) => {
   let form = req.body
   let data = {
@@ -79,7 +76,7 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-  console.log(req.body)
+  //console.log(req.body)
   let email = req.body.cus_email
   let password = req.body.cus_password
 
@@ -127,13 +124,13 @@ export const sessionget = async (req, res) => {
             .status(500)
             .send('Server error can not pull data from cate')
         }
-        //console.log(results) // ตรวจสอบว่าผลลัพธ์ที่ได้รับมาจากการสอบถามถูกต้องหรือไม่
+        //console.log(results)
         res.json({
           signedIn: true,
           email: req.session.email,
           name: req.session.name,
           cus_id: req.session.cus_id,
-          categories: results, // เพิ่มข้อมูลหมวดหมู่ใน response
+          categories: results,
         })
       })
     } catch (err) {
@@ -152,7 +149,7 @@ export const sessiondel = async (req, res) => {
 }
 
 export const createnote = async (req, res) => {
-  console.log(req.body, req.session.cus_id)
+  //console.log(req.body, req.session.cus_id)
   let form = req.body
   let customer_id = req.session.cus_id
   let data = {
@@ -179,11 +176,6 @@ export const createnote = async (req, res) => {
         return res.status(400).send()
       }
 
-      // เมื่อข้อมูลถูกเพิ่มในตาราง note สำเร็จแล้ว
-      // คุณสามารถใช้ผลลัพธ์ที่ได้จากการเพิ่มข้อมูลในตาราง note
-      // เพื่อใช้เป็นข้อมูลสำหรับการเพิ่มในตาราง history_note
-
-      // เพิ่มข้อมูลในตาราง history_note
       conn.query(
         'INSERT INTO history_note(created, cus_id, note_id, cate_id,note_content) VALUES (?,?,?,?,?)',
         [
