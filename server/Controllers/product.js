@@ -127,17 +127,35 @@ export const createnote = async (req, res) => {
     cate_id: form.cate_id || '',
     title: form.title || '',
     content: form.content || '',
-    created: form.cus_password2 || '',
-    updated: form.cus_password2 || '',
+    created: form.created ? new Date(Date.parse(form.created)) : new Date(),
+    updated: form.updated ? new Date(Date.parse(form.updated)) : new Date(),
     cus_id: customer_id || '',
   }
-  try {
-    conn.query()
-  } catch (err) {}
+  conn.query(
+    'INSERT INTO note(cate_id,title,content,created,updated,cus_id) VALUES (?,?,?,?,?,?)',
+    [
+      data.cate_id,
+      data.title,
+      data.content,
+      data.created,
+      data.updated,
+      data.cus_id,
+    ],
+    (err, results, fields) => {
+      if (err) {
+        console.log('Error while inserting data into the database', err)
+        return res.status(400).send()
+      }
+      return res
+        .status(201)
+        .json({ message: 'New data Note successfully created' })
+    }
+  )
 }
 
-export const update = async (req, res) => {
+export const historylist = async (req, res) => {
   try {
+    conn.query('SELECT * FROM')
     res.send('Hello Update')
   } catch (err) {
     console.log(err)
