@@ -121,75 +121,7 @@ export const sessiondel = async (req, res) => {
   })
 }
 
-export const createnote = async (req, res) => {
-  // console.log(req.body)
-  // let form = req.body
-  // let data = {
-  //   cus_name: form.cus_name || '',
-  //   cus_email: form.cus_email || '',
-  //   cus_tel: form.cus_tel || '',
-  //   cate_name: form.cate_name || '',
-  //   title: form.title || '',
-  //   content: form.content || '',
-  //   created: form.created ? new Date(Date.parse(form.create)) : new Date(),
-  //   updated: form.updated ? new Date(Date.parse(form.updated)) : new Date(),
-  // }
-  // try {
-  //   // เพิ่มข้อมูลลูกค้า
-  //   conn.query(
-  //     'INSERT INTO customer(cus_name, cus_email, cus_tel) VALUES (?, ?, ?)',
-  //     [data.cus_name, data.cus_email, data.cus_tel],
-  //     (err, customerResult) => {
-  //       if (err) {
-  //         console.log('Error while inserting data into the database', err)
-  //         return res.status(400).send()
-  //       }
-  //       // เพิ่มหมวดหมู่
-  //       conn.query(
-  //         'INSERT INTO category_note(cate_name) VALUES (?)',
-  //         [data.cate_name],
-  //         (err, categoryResult) => {
-  //           if (err) {
-  //             console.log('Error while inserting data into the database', err)
-  //             return res.status(400).send()
-  //           }
-  //           // ดึง category_id จากตาราง category_note
-  //           const categoryId = categoryResult.insertId
-  //           // ดึง customer_id จากตาราง customer
-  //           const customerId = customerResult.insertId
-  //           // เพิ่มบันทึก
-  //           conn.query(
-  //             'INSERT INTO note(title,content,created,updated,category_id,customer_id) VALUES (?,?,?,?,?,?)',
-  //             [
-  //               data.title,
-  //               data.content,
-  //               data.created,
-  //               data.updated,
-  //               categoryId,
-  //               customerId,
-  //             ],
-  //             (err, result) => {
-  //               if (err) {
-  //                 console.log(
-  //                   'Error while inserting data in the database with note',
-  //                   err
-  //                 )
-  //                 return res.status(400).send()
-  //               }
-  //               return res
-  //                 .status(201)
-  //                 .json({ message: 'New data successfully created' })
-  //             }
-  //           )
-  //         }
-  //       )
-  //     }
-  //   )
-  // } catch (err) {
-  //   console.log(err)
-  //   return res.status(500).send()
-  // }
-}
+export const createnote = async (req, res) => {}
 
 export const update = async (req, res) => {
   try {
