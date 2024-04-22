@@ -1,12 +1,12 @@
-import { useRef } from 'react'
+import { useContext, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { baseUrl } from '../App'
+import { baseUrl, dataContext } from '../App'
 
 export default function Login() {
   const navigate = useNavigate()
   const form = useRef()
   const textPswd = useRef()
-
+  let [data, setData] = useContext(dataContext)
   const onBlurPassword = () => {
     let pswd = textPswd.current.value
     if (pswd !== '' && !pswd.match(/^[0-9a-zA-Z]+$/)) {
@@ -32,9 +32,10 @@ export default function Login() {
         if (!result) {
           alert('User not found')
         } else {
-          console.log(result)
+          setData(result.user_data)
+          console.log(result.user_data)
           alert('Login successfully')
-          navigate('/')
+          //navigate('/')
         }
       })
       .catch((err) => alert(err))

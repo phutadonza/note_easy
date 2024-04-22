@@ -13,7 +13,7 @@ const Navbar = () => {
     fetch('/api/note/sessionget')
       .then((res) => res.json())
       .then((result) => {
-        console.log(result.name)
+        console.log(result)
         setSignedIn(result.signedIn)
         setUserData(result.name)
         setData(result.id)

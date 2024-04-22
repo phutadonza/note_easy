@@ -58,14 +58,17 @@ export const login = async (req, res) => {
       //console.log(results)
       if (results.length > 0) {
         // หากพบผู้ใช้ที่ตรงกับ username และ password
-        if (password == results[0].cus_password) {
+        if (
+          email == results[0].cus_email &&
+          password == results[0].cus_password
+        ) {
           console.log(results[0].cus_id)
           req.session['email'] = email
           req.session['name'] = results[0].cus_name
-          req.session['cus_id'] = results[0].cus_id
+          //req.session['cus_id'] = results[0].cus_id
           res.json({
             signedIn: true,
-            user_data: results[0], //ส่ง Object ไป
+            user_data: results[0].cus_id, //ส่ง Object ไป
           })
         } else {
           console.error('Login failed:', error)

@@ -1,5 +1,5 @@
 import { useEffect, useContext, useRef, useState } from 'react'
-import { dataContext, userContext } from '../App'
+import { dataContext, userContext, userDataContext } from '../App'
 
 function Note() {
   const form = useRef()
@@ -7,14 +7,16 @@ function Note() {
   let category = ['study', 'work']
   let [signedIn, setSignedIn] = useContext(userContext)
   let [data, setData] = useContext(dataContext)
+  let [userData, setUserData] = useContext(userDataContext)
 
   useEffect(() => {
     fetch('/api/note/sessionget')
       .then((res) => res.json())
       .then((result) => {
-        console.log(result)
+        console.log('-->' + result)
         setSignedIn(result.signedIn)
         setData(result.cus_id)
+
         setCategories(result.categories)
       })
   }, [])
@@ -24,7 +26,8 @@ function Note() {
     const formData = new FormData(form.current)
     const formEnt = Object.fromEntries(formData.entries())
     const combinedData = { ...formEnt, cus_id: data }
-    console.log(combinedData)
+    //console.log(data.cus_id)
+    //console.log(combinedData)
 
     fetch('/api/note/createnote', {
       method: 'POST',
