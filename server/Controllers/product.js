@@ -23,40 +23,61 @@ export const register = async (req, res) => {
     cus_tel: form.cus_tel || '',
   }
 
-  // แปลงรหัสผ่านเป็นแฮช
-  const saltRounds = 10
-  bcrypt.hash(form.cus_password, saltRounds, (err, hash) => {
-    if (err) {
-      console.log('Error while hashing password', err)
-      return res.status(500).send()
-    }
-
-    // บันทึกข้อมูลผู้ใช้ (รวมกับรหัสผ่านที่ถูกแปลงแล้ว) ลงในฐานข้อมูล
-    try {
-      conn.query(
-        'INSERT INTO customer(cus_name,cus_email,cus_password,cus_tel) VALUES (?,?,?,?)',
-        [
-          data.cus_name,
-          data.cus_email,
-          hash, // ใช้รหัสผ่านที่ถูกแปลงแล้ว
-          data.cus_tel,
-        ],
-        (err, results, fields) => {
-          if (err) {
-            console.log('Error while inserting data into the database', err)
-            return res.status(400).send()
-          }
-          return res
-            .status(201)
-            .json({ message: 'New data Customer successfully created' })
+  try {
+    // ตรวจสอบว่ามีอีเมลนี้อยู่ในระบบหรือไม่
+    conn.query(
+      'SELECT * FROM customer WHERE cus_email = ?',
+      [data.cus_email],
+      (err, results, fields) => {
+        if (err) {
+          console.log('Error while checking email in the database', err)
+          return res.status(500).send()
         }
-      )
-    } catch (err) {
-      console.log(err)
-      res.status(500).send()
-    }
-  })
+
+        // ถ้ามีผลลัพธ์คือมีอีเมลนี้อยู่ในระบบแล้ว
+        if (results.length > 0) {
+          return res.status(400).json({ message: 'Email already exists' })
+        } else {
+          // แปลงรหัสผ่านเป็นแฮช
+          const saltRounds = 10
+          bcrypt.hash(form.cus_password, saltRounds, (err, hash) => {
+            if (err) {
+              console.log('Error while hashing password', err)
+              return res.status(500).send()
+            }
+
+            // บันทึกข้อมูลผู้ใช้ (รวมกับรหัสผ่านที่ถูกแปลงแล้ว) ลงในฐานข้อมูล
+            conn.query(
+              'INSERT INTO customer(cus_name,cus_email,cus_password,cus_tel) VALUES (?,?,?,?)',
+              [
+                data.cus_name,
+                data.cus_email,
+                hash, // ใช้รหัสผ่านที่ถูกแปลงแล้ว
+                data.cus_tel,
+              ],
+              (err, results, fields) => {
+                if (err) {
+                  console.log(
+                    'Error while inserting data into the database',
+                    err
+                  )
+                  return res.status(400).send()
+                }
+                return res
+                  .status(201)
+                  .json({ message: 'New data Customer successfully created' })
+              }
+            )
+          })
+        }
+      }
+    )
+  } catch (err) {
+    console.log(err)
+    res.status(500).send()
+  }
 }
+
 export const login = async (req, res) => {
   console.log(req.body)
   let email = req.body.cus_email

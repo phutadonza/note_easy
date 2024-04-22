@@ -39,10 +39,10 @@ export default function Register() {
       .then((result) => {
         // ตรวจสอบว่าการสมัครสำเร็จหรือไม่
         if (result.message === 'New data Customer successfully created') {
-          alert('successfully created')
+          alert(result.message)
           navigate('/login')
         } else if (result.message === 'Email already exists') {
-          alert('Email already exists. Please use another email.')
+          alert(result.message)
         } else {
           // กรณีอื่นๆ ที่ไม่ได้ระบุไว้ในเงื่อนไขข้างต้น
           alert('An error occurred. Please try again later.')
