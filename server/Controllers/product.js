@@ -65,7 +65,7 @@ export const login = async (req, res) => {
           console.log(results[0].cus_id)
           req.session['email'] = email
           req.session['name'] = results[0].cus_name
-          //req.session['cus_id'] = results[0].cus_id
+          req.session['cus_id'] = results[0].cus_id
           res.json({
             signedIn: true,
             user_data: results[0].cus_id, //ส่ง Object ไป
@@ -95,7 +95,7 @@ export const sessionget = async (req, res) => {
             .status(500)
             .send('Server error can not pull data from cate')
         }
-        console.log(results) // ตรวจสอบว่าผลลัพธ์ที่ได้รับมาจากการสอบถามถูกต้องหรือไม่
+        //console.log(results) // ตรวจสอบว่าผลลัพธ์ที่ได้รับมาจากการสอบถามถูกต้องหรือไม่
         res.json({
           signedIn: true,
           email: req.session.email,
@@ -121,6 +121,16 @@ export const sessiondel = async (req, res) => {
 
 export const createnote = async (req, res) => {
   console.log(req)
+  let form = req.body
+  let customer_id = req.session.cus_id
+  let data = {
+    cate_id: form.cate_id || '',
+    title: form.title || '',
+    content: form.content || '',
+    created: form.cus_password2 || '',
+    updated: form.cus_password2 || '',
+    cus_id: customer_id || '',
+  }
 }
 
 export const update = async (req, res) => {

@@ -6,17 +6,14 @@ function Note() {
   const [categories, setCategories] = useState([])
   let category = ['study', 'work']
   let [signedIn, setSignedIn] = useContext(userContext)
-  let [data, setData] = useContext(dataContext)
-  let [userData, setUserData] = useContext(userDataContext)
+  let [data_id, setData_id] = useState()
 
   useEffect(() => {
     fetch('/api/note/sessionget')
       .then((res) => res.json())
       .then((result) => {
-        console.log('-->' + result)
+        setData_id(result.cus_id)
         setSignedIn(result.signedIn)
-        setData(result.cus_id)
-
         setCategories(result.categories)
       })
   }, [])
@@ -25,9 +22,9 @@ function Note() {
     event.preventDefault()
     const formData = new FormData(form.current)
     const formEnt = Object.fromEntries(formData.entries())
-    const combinedData = { ...formEnt, cus_id: data }
+    const combinedData = { ...formEnt, cus_id: data_id }
     //console.log(data.cus_id)
-    //console.log(combinedData)
+    console.log(combinedData)
 
     fetch('/api/note/createnote', {
       method: 'POST',

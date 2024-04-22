@@ -17,7 +17,7 @@ const Navbar = () => {
         setSignedIn(result.signedIn)
         setUserData(result.name)
         setData(result.id)
-        console.log(data)
+        //console.log(data)
       })
       .catch((err) => alert(err.message))
   }, [])
