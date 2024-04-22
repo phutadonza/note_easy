@@ -141,25 +141,64 @@ export const createnote = async (req, res) => {
       data.updated,
       data.cus_id,
     ],
-    (err, results, fields) => {
+    (err, noteResults, fields) => {
       if (err) {
-        console.log('Error while inserting data into the database', err)
+        console.log('Error while inserting data into the note table', err)
         return res.status(400).send()
       }
-      return res
-        .status(201)
-        .json({ message: 'New data Note successfully created' })
+
+      // เมื่อข้อมูลถูกเพิ่มในตาราง note สำเร็จแล้ว
+      // คุณสามารถใช้ผลลัพธ์ที่ได้จากการเพิ่มข้อมูลในตาราง note
+      // เพื่อใช้เป็นข้อมูลสำหรับการเพิ่มในตาราง history_note
+
+      // เพิ่มข้อมูลในตาราง history_note
+      conn.query(
+        'INSERT INTO history_note(created, cus_id, note_id, cate_id) VALUES (?,?,?,?)',
+        [
+          data.created,
+          data.cus_id,
+          noteResults.insertId, // ใช้ ID ของ note ที่ได้จากการเพิ่มล่าสุด
+          data.cate_id,
+        ],
+        (historyErr, historyResults, fields) => {
+          if (historyErr) {
+            console.log(
+              'Error while inserting data into the history_note table',
+              historyErr
+            )
+            return res.status(400).send()
+          }
+
+          return res
+            .status(201)
+            .json({ message: 'New data Note and History successfully created' })
+        }
+      )
     }
   )
 }
 
 export const historylist = async (req, res) => {
   try {
-    conn.query('SELECT * FROM')
-    res.send('Hello Update')
+    conn.query(
+      `SELECT note.created, customer.cus_name, category_note.cate_name, note.title
+      FROM history_note
+      JOIN customer ON history_note.cus_id = customer.cus_id
+      JOIN category_note ON history_note.cate_id = category_note.category_id
+      JOIN note ON history_note.note_id = note.note_id`,
+      (err, results, fields) => {
+        if (err) {
+          console.log(err)
+          return res
+            .status(500)
+            .send('Server error can not pull data from history')
+        }
+        res.json(results)
+      }
+    )
   } catch (err) {
     console.log(err)
-    res.status(500).send('server error')
+    res.status(500).send('Server error with API historylist')
   }
 }
 export const remove = async (req, res) => {

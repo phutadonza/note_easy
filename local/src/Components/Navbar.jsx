@@ -20,7 +20,7 @@ const Navbar = () => {
         //console.log(data)
       })
       .catch((err) => alert(err.message))
-  }, [])
+  }, [data])
 
   const onClickLink = (event) => {
     event.preventDefault()
