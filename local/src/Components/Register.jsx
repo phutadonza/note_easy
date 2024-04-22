@@ -94,6 +94,7 @@ export default function Register() {
             <label>Re-Password</label>
             <input
               type="password"
+              name="cus_password2"
               required
               className="form-control form-control-sm"
               ref={textPswd2}

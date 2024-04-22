@@ -22,7 +22,7 @@ export default function Login() {
     const formData = new FormData(form.current)
     const formEnt = Object.fromEntries(formData.entries())
 
-    console.log(formEnt)
+    //console.log(formEnt)
     fetch('/api/note/login', {
       method: 'POST',
       body: JSON.stringify(formEnt),
@@ -35,7 +35,7 @@ export default function Login() {
           alert('User not found')
         } else {
           setData(result.user_data)
-          console.log(result.user_data)
+          //console.log(result.user_data)
           alert('Login successfully')
           navigate('/')
         }

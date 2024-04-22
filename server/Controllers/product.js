@@ -36,7 +36,7 @@ export const register = async (req, res) => {
 
         // ถ้ามีผลลัพธ์คือมีอีเมลนี้อยู่ในระบบแล้ว
         if (results.length > 0) {
-          return res.status(400).json({ message: 'Email already exists' })
+          return res.json({ message: 'Email already exists' })
         } else {
           // แปลงรหัสผ่านเป็นแฮช
           const saltRounds = 10
@@ -61,7 +61,7 @@ export const register = async (req, res) => {
                     'Error while inserting data into the database',
                     err
                   )
-                  return res.status(400).send()
+                  return res.status(400).send('')
                 }
                 return res
                   .status(201)

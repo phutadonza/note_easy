@@ -54,7 +54,32 @@ function Note() {
   if (!signedIn) {
     return (
       <>
-        <>Please Enter your username and password</>
+        <div className="container mt-5">
+          <h2>History Notes</h2>
+          <div className="row">
+            {historyData.map((item, index) => {
+              let dt = new Date(Date.parse(item.created))
+              let df = (
+                <>
+                  {dt.getDate()}/{dt.getMonth() + 1}/{dt.getFullYear()}
+                </>
+              )
+              return (
+                <div key={index} className="col-md-4 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">Title : {item.title}</h5>
+                      <p className="card-text">Content : {item.content}</p>
+                      <p className="card-text">User : {item.cus_name}</p>
+                      <p className="card-text">Category : {item.cate_name}</p>
+                      <p className="card-text">Created : {df}</p>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </>
     )
   } else {
