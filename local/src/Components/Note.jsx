@@ -1,12 +1,15 @@
 import { useEffect, useContext, useRef, useState } from 'react'
 import { dataContext, userContext, userDataContext } from '../App'
+import { useNavigate } from 'react-router-dom'
 
 function Note() {
   const form = useRef()
   const [categories, setCategories] = useState([])
-  let category = ['study', 'work']
+  const [historyData, setHistoryData] = useState([])
   let [signedIn, setSignedIn] = useContext(userContext)
   let [data_id, setData_id] = useState()
+  let [update, setUpdate] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetch('/api/note/sessionget')
@@ -17,6 +20,14 @@ function Note() {
         setCategories(result.categories)
       })
   }, [])
+
+  useEffect(() => {
+    fetch('/api/historylist')
+      .then((res) => res.json())
+      .then((result) => {
+        setHistoryData(result)
+      })
+  }, [update])
 
   const onSubmitForm = (event) => {
     event.preventDefault()
@@ -34,6 +45,8 @@ function Note() {
       .then((res) => res.json())
       .then((result) => {
         alert('successfully created note')
+        setUpdate(result)
+        form.current.reset()
       })
       .catch((err) => alert(err))
   }
@@ -108,23 +121,32 @@ function Note() {
             </form>
           </div>
         </div>
-        {/* <div className="container mt-5">
+        <div className="container mt-5">
           <h2>History Notes</h2>
           <div className="row">
-            {historyData.map((item, index) => (
-              <div key={index} className="col-md-4 mb-4">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">{item.title}</h5>
-                    <p className="card-text">{item.content}</p>
-                    <p className="card-text">Category: {item.category_name}</p>
-                    <p className="card-text">Created: {item.created}</p>
+            {historyData.map((item, index) => {
+              let dt = new Date(Date.parse(item.created))
+              let df = (
+                <>
+                  {dt.getDate()}/{dt.getMonth() + 1}/{dt.getFullYear()}
+                </>
+              )
+              return (
+                <div key={index} className="col-md-4 mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">Title : {item.title}</h5>
+                      <p className="card-text">Content : {item.content}</p>
+                      <p className="card-text">User : {item.cus_name}</p>
+                      <p className="card-text">Category : {item.cate_name}</p>
+                      <p className="card-text">Created : {df}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
-        </div> */}
+        </div>
       </>
     )
   }

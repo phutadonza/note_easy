@@ -29,18 +29,24 @@ export default function Register() {
     const formData = new FormData(form.current)
     const formEnt = Object.fromEntries(formData.entries())
 
-    console.log(formEnt)
-    // fetch(baseUrl + '/api/note', {
+    // ทำการส่งข้อมูลฟอร์มไปยังเซิร์ฟเวอร์
     fetch('/api/note/register', {
       method: 'POST',
       body: JSON.stringify(formEnt),
       headers: { 'Content-Type': 'application/json' },
     })
-      .then((res) => res.text())
+      .then((res) => res.json()) // แก้ไขให้เรียก .json() เพื่อให้ได้ข้อมูลเป็น JSON
       .then((result) => {
-        // console.log(result)
-        alert('successfully created')
-        navigate('/login')
+        // ตรวจสอบว่าการสมัครสำเร็จหรือไม่
+        if (result.message === 'New data Customer successfully created') {
+          alert('successfully created')
+          navigate('/login')
+        } else if (result.message === 'Email already exists') {
+          alert('Email already exists. Please use another email.')
+        } else {
+          // กรณีอื่นๆ ที่ไม่ได้ระบุไว้ในเงื่อนไขข้างต้น
+          alert('An error occurred. Please try again later.')
+        }
       })
       .catch((err) => alert(err))
   }

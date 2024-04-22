@@ -2,6 +2,7 @@ import { Notes, Customers, History, Category } from '../Models/models.js'
 import { connection as conn } from '../Config/db.js'
 import session from 'express-session'
 import express from 'express'
+import bcrypt from 'bcrypt'
 
 const app = express()
 
@@ -15,36 +16,46 @@ app.use(
 export const cate_list = async (req, res) => {}
 
 export const register = async (req, res) => {
-  //console.log(req.body)
   let form = req.body
   let data = {
     cus_name: form.cus_name || '',
     cus_email: form.cus_email || '',
-    cus_password: form.cus_password || '',
-    cus_password2: form.cus_password2 || '',
     cus_tel: form.cus_tel || '',
   }
-  try {
-    conn.query(
-      'INSERT INTO customer(cus_name,cus_email,cus_password,cus_password2,cus_tel) VALUES (?,?,?,?,?)',
-      [
-        data.cus_name,
-        data.cus_email,
-        data.cus_password,
-        data.cus_password2,
-        data.cus_tel,
-      ],
-      (err, results, fields) => {
-        if (err) {
-          console.log('Error while inserting data into the database', err)
-          return res.status(400).send()
+
+  // แปลงรหัสผ่านเป็นแฮช
+  const saltRounds = 10
+  bcrypt.hash(form.cus_password, saltRounds, (err, hash) => {
+    if (err) {
+      console.log('Error while hashing password', err)
+      return res.status(500).send()
+    }
+
+    // บันทึกข้อมูลผู้ใช้ (รวมกับรหัสผ่านที่ถูกแปลงแล้ว) ลงในฐานข้อมูล
+    try {
+      conn.query(
+        'INSERT INTO customer(cus_name,cus_email,cus_password,cus_tel) VALUES (?,?,?,?)',
+        [
+          data.cus_name,
+          data.cus_email,
+          hash, // ใช้รหัสผ่านที่ถูกแปลงแล้ว
+          data.cus_tel,
+        ],
+        (err, results, fields) => {
+          if (err) {
+            console.log('Error while inserting data into the database', err)
+            return res.status(400).send()
+          }
+          return res
+            .status(201)
+            .json({ message: 'New data Customer successfully created' })
         }
-        return res
-          .status(201)
-          .json({ message: 'New data Customer successfully created' })
-      }
-    )
-  } catch (err) {}
+      )
+    } catch (err) {
+      console.log(err)
+      res.status(500).send()
+    }
+  })
 }
 export const login = async (req, res) => {
   console.log(req.body)
@@ -153,12 +164,13 @@ export const createnote = async (req, res) => {
 
       // เพิ่มข้อมูลในตาราง history_note
       conn.query(
-        'INSERT INTO history_note(created, cus_id, note_id, cate_id) VALUES (?,?,?,?)',
+        'INSERT INTO history_note(created, cus_id, note_id, cate_id,note_content) VALUES (?,?,?,?,?)',
         [
           data.created,
           data.cus_id,
           noteResults.insertId, // ใช้ ID ของ note ที่ได้จากการเพิ่มล่าสุด
           data.cate_id,
+          data.content,
         ],
         (historyErr, historyResults, fields) => {
           if (historyErr) {
@@ -181,7 +193,7 @@ export const createnote = async (req, res) => {
 export const historylist = async (req, res) => {
   try {
     conn.query(
-      `SELECT note.created, customer.cus_name, category_note.cate_name, note.title
+      `SELECT note.created, customer.cus_name, category_note.cate_name, note.title,note.content
       FROM history_note
       JOIN customer ON history_note.cus_id = customer.cus_id
       JOIN category_note ON history_note.cate_id = category_note.category_id
